@@ -23,7 +23,10 @@ public class DriveToObject extends Command
 	private double currentRange;
 	private double previousRange;
 	private double twistCorrection;
-
+	
+	private boolean isInitializeNeeded;
+	private boolean isCreeping;
+	
 	/**
 	 * Uses values from the smart dashboard to drive the robot
 	 * 
@@ -52,29 +55,39 @@ public class DriveToObject extends Command
 			targetRange = SmartDashboard.getNumber(targetRangeKey);
 			creepMagnitude = SmartDashboard.getNumber(creepMagnitudeKey);
 		}
-		Robot.gyroscope.reset();
+		
+		isInitializeNeeded = true;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute()
 	{
-
+		SmartDashboard.putBoolean("Is creeping", isCreeping);
+		
+		if (isInitializeNeeded)
+		{
+			Robot.gyroscope.reset();
+			isCreeping = false;
+			isInitializeNeeded = false;
+		}
+		
 		// We drive forward until we reach brakeRange.
 		// We then reverse the motors until we come to a stop.
 		// We then creep forwards until we reach range.
 		currentRange = Robot.rangeFinder.getRange();
 		twistCorrection = Robot.gyroscope.getTwistCorrection();
-
+		
 		if (currentRange > brakeRange)
 		{
 			Robot.driveTrain.driveCartesian(forwardMagnitude, 0, twistCorrection, 0);
 		}
-		else if (previousRange - currentRange > .1)
+		else if (!isCreeping && previousRange > currentRange)
 		{
 			Robot.driveTrain.driveCartesian(-forwardMagnitude, 0, twistCorrection, 0);
 		}
-		else if (currentRange > targetRange)
-		{
+		else
+		{ 
+			isCreeping = true;
 			Robot.driveTrain.driveCartesian(creepMagnitude, 0, twistCorrection, 0);
 		}
 
@@ -91,6 +104,7 @@ public class DriveToObject extends Command
 	protected void end()
 	{
 		Robot.driveTrain.driveCartesian(0, 0, 0, 0);
+		isInitializeNeeded = true;
 	}
 
 	// Called when another command which requires one or more of the same
