@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1165.robot;
 
+import org.usfirst.frc.team1165.robot.commands.Rotate;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -42,6 +44,10 @@ public class OI
 	public OI()
 	{
         SmartDashboard.putNumber("Dampening", .9);
+        
+        SmartDashboard.putNumber("Target Angle", 45);
+        
+        SmartDashboard.putData(new Rotate("Target Angle"));
 	}
 
 	public double getDampening()

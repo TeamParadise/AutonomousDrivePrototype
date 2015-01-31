@@ -24,7 +24,6 @@ public class DriveToObject extends Command
 	private double previousRange;
 	private double twistCorrection;
 	
-	private boolean isInitializeNeeded;
 	private boolean isCreeping;
 	
 	/**
@@ -56,20 +55,14 @@ public class DriveToObject extends Command
 			creepMagnitude = SmartDashboard.getNumber(creepMagnitudeKey);
 		}
 		
-		isInitializeNeeded = true;
+		Robot.gyroscope.reset();
+		isCreeping = false;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute()
 	{
 		SmartDashboard.putBoolean("Is creeping", isCreeping);
-		
-		if (isInitializeNeeded)
-		{
-			Robot.gyroscope.reset();
-			isCreeping = false;
-			isInitializeNeeded = false;
-		}
 		
 		// We drive forward until we reach brakeRange.
 		// We then reverse the motors until we come to a stop.
@@ -104,7 +97,6 @@ public class DriveToObject extends Command
 	protected void end()
 	{
 		Robot.driveTrain.driveCartesian(0, 0, 0, 0);
-		isInitializeNeeded = true;
 	}
 
 	// Called when another command which requires one or more of the same
