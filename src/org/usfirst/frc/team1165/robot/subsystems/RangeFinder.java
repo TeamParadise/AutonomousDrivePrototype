@@ -12,25 +12,25 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class RangeFinder extends Subsystem
 {
-    private Ultrasonic ultrasonic;
-    
-    public RangeFinder()
-    {
-	ultrasonic = new Ultrasonic(RobotMap.ultrasonicPingChannel, RobotMap.ultrasonicEchoChannel);
-	ultrasonic.setDistanceUnits(Unit.kInches);
-	ultrasonic.setAutomaticMode(true);
-    }
-    
-    public double getRange()
-    {
-	return ultrasonic.getRangeInches();
-    }
+	private Ultrasonic ultrasonic;
 
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
+	public RangeFinder()
+	{
+		ultrasonic = new Ultrasonic(RobotMap.ultrasonicPingChannel, RobotMap.ultrasonicEchoChannel);
+		ultrasonic.setDistanceUnits(Unit.kInches);
+		ultrasonic.setAutomaticMode(true);
+	}
 
-    public void initDefaultCommand()
-    {
-	setDefaultCommand(new ReportRange());
-    }
+	public double getRange()
+	{
+		return ultrasonic.getRangeInches();
+	}
+
+	// Put methods for controlling this subsystem
+	// here. Call these from Commands.
+
+	public void initDefaultCommand()
+	{
+		setDefaultCommand(new ReportRange());
+	}
 }
